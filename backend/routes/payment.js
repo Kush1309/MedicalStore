@@ -4,14 +4,26 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
 // Initialize Razorpay
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+let razorpay = null;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET && process.env.RAZORPAY_KEY_ID !== 'rzp_test_your_key_id') {
+    razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+    console.log('✅ Razorpay initialized successfully');
+} else {
+    console.log('⚠️ Razorpay keys missing or placeholder. Payment features will be disabled.');
+}
 
 // Create Razorpay order
 router.post('/create-order', async (req, res) => {
     try {
+        if (!razorpay) {
+            return res.status(400).json({
+                success: false,
+                message: 'Payment gateway not configured. Please add Razorpay keys in environment variables.'
+            });
+        }
         const { amount, currency = 'INR' } = req.body;
 
         const options = {
@@ -43,6 +55,12 @@ router.post('/create-order', async (req, res) => {
 // Verify payment signature
 router.post('/verify-payment', async (req, res) => {
     try {
+        if (!razorpay) {
+            return res.status(400).json({
+                success: false,
+                message: 'Payment gateway not configured.'
+            });
+        }
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
         // Create signature
@@ -78,6 +96,12 @@ router.post('/verify-payment', async (req, res) => {
 // Get payment details
 router.get('/payment/:paymentId', async (req, res) => {
     try {
+        if (!razorpay) {
+            return res.status(400).json({
+                success: false,
+                message: 'Payment gateway not configured.'
+            });
+        }
         const payment = await razorpay.payments.fetch(req.params.paymentId);
         res.json({
             success: true,
