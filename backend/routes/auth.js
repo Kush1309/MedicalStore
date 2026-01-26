@@ -17,10 +17,18 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Password must be at least 6 characters' });
         }
 
+        // Check if it's the Admin email
+        const adminEmail = process.env.ADMIN_EMAIL || 'kushagrasaxena1309@gmail.com';
+        if (email.toLowerCase() === adminEmail.toLowerCase()) {
+            return res.status(400).json({
+                message: 'This email is reserved for administrative access. Please login instead.'
+            });
+        }
+
         // Check if user already exists
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists with this email' });
+            return res.status(400).json({ message: 'User already exists with this email. Please login.' });
         }
 
         // Create user
@@ -45,7 +53,12 @@ router.post('/register', async (req, res) => {
         }
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ message: error.message });
+        // Provide more descriptive error if it's a Mongoose validation error
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            return res.status(400).json({ message: messages.join(', ') });
+        }
+        res.status(500).json({ message: error.message || 'Internal Server Error' });
     }
 });
 
