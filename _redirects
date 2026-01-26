@@ -1,0 +1,8 @@
+# Proxy all /api requests to the backend server
+/api/*  https://your-medical-backend.onrender.com/api/:splat  200
+
+# Proxy /uploads requests to the backend server
+/uploads/*  https://your-medical-backend.onrender.com/uploads/:splat  200
+
+# Fix for SPA routing (redirect all non-file requests to index.html)
+/*      /index.html  200

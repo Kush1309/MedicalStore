@@ -1,0 +1,308 @@
+<!-- Login/Signup Modal -->
+<div id="auth-modal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+
+        <!-- Login Form -->
+        <div id="login-form-container">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Welcome Back!</h2>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" name="email" required placeholder="your@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" name="password" required placeholder="Enter your password"
+                        minlength="6">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+
+            <div style="display: flex; align-items: center; margin: 1.5rem 0; gap: 1rem;">
+                <div style="flex: 1; height: 1px; background: var(--border);"></div>
+                <span style="color: var(--text-secondary); font-size: 0.875rem;">OR</span>
+                <div style="flex: 1; height: 1px; background: var(--border);"></div>
+            </div>
+
+            <button onclick="loginWithGoogle()" type="button" class="btn"
+                style="width: 100%; background: white; color: #444; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 0.75rem; font-weight: 500;">
+                <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"
+                        fill="#4285F4" />
+                    <path
+                        d="M9.003 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.96v2.332C2.438 15.983 5.482 18 9.003 18z"
+                        fill="#34A853" />
+                    <path
+                        d="M3.964 10.712c-.18-.54-.282-1.117-.282-1.71 0-.593.102-1.17.282-1.71V4.96H.957C.347 6.175 0 7.55 0 9.002c0 1.452.348 2.827.957 4.042l3.007-2.332z"
+                        fill="#FBBC05" />
+                    <path
+                        d="M9.003 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.464.891 11.426 0 9.003 0 5.482 0 2.438 2.017.96 4.958L3.967 7.29c.708-2.127 2.692-3.71 5.036-3.71z"
+                        fill="#EA4335" />
+                </svg>
+                Continue with Google
+            </button>
+
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                Don't have an account?
+                <a href="#" onclick="showSignupForm(); return false;"
+                    style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign Up</a>
+            </p>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form-container" style="display: none;">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Create Account</h2>
+            <form id="signup-form" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" name="name" required placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" name="email" required placeholder="your@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" name="password" required
+                        placeholder="At least 6 characters" minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" name="confirmPassword" required
+                        placeholder="Re-enter password" minlength="6">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+            </form>
+
+            <div style="display: flex; align-items: center; margin: 1.5rem 0; gap: 1rem;">
+                <div style="flex: 1; height: 1px; background: var(--border);"></div>
+                <span style="color: var(--text-secondary); font-size: 0.875rem;">OR</span>
+                <div style="flex: 1; height: 1px; background: var(--border);"></div>
+            </div>
+
+            <button onclick="loginWithGoogle()" type="button" class="btn"
+                style="width: 100%; background: white; color: #444; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; gap: 0.75rem; font-weight: 500;">
+                <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"
+                        fill="#4285F4" />
+                    <path
+                        d="M9.003 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.96v2.332C2.438 15.983 5.482 18 9.003 18z"
+                        fill="#34A853" />
+                    <path
+                        d="M3.964 10.712c-.18-.54-.282-1.117-.282-1.71 0-.593.102-1.17.282-1.71V4.96H.957C.347 6.175 0 7.55 0 9.002c0 1.452.348 2.827.957 4.042l3.007-2.332z"
+                        fill="#FBBC05" />
+                    <path
+                        d="M9.003 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.464.891 11.426 0 9.003 0 5.482 0 2.438 2.017.96 4.958L3.967 7.29c.708-2.127 2.692-3.71 5.036-3.71z"
+                        fill="#EA4335" />
+                </svg>
+                Sign up with Google
+            </button>
+
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                Already have an account?
+                <a href="#" onclick="showLoginForm(); return false;"
+                    style="color: var(--primary); text-decoration: none; font-weight: 600;">Login</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showAuthModal(mode = 'login') {
+        document.getElementById('auth-modal').classList.add('active');
+        if (mode === 'signup') {
+            showSignupForm();
+        } else {
+            showLoginForm();
+        }
+    }
+
+    function closeAuthModal() {
+        document.getElementById('auth-modal').classList.remove('active');
+        document.getElementById('login-form').reset();
+        document.getElementById('signup-form').reset();
+    }
+
+    function showLoginForm() {
+        document.getElementById('login-form-container').style.display = 'block';
+        document.getElementById('signup-form-container').style.display = 'none';
+    }
+
+    function showSignupForm() {
+        document.getElementById('login-form-container').style.display = 'none';
+        document.getElementById('signup-form-container').style.display = 'block';
+    }
+
+    async function handleLogin(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const email = formData.get('email');
+        const password = formData.get('password');
+
+        try {
+            await auth.login(email, password);
+            cart.showNotification('Login successful!', 'success');
+            closeAuthModal();
+
+            // Reload page to update UI
+            setTimeout(() => window.location.reload(), 500);
+        } catch (error) {
+            cart.showNotification(error.message || 'Login failed', 'error');
+        }
+    }
+
+    async function handleSignup(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirmPassword');
+
+        // Validate passwords match
+        if (password !== confirmPassword) {
+            cart.showNotification('Passwords do not match', 'error');
+            return;
+        }
+
+        try {
+            await auth.register(name, email, password);
+            cart.showNotification('Account created successfully!', 'success');
+            closeAuthModal();
+
+            // Reload page to update UI
+            setTimeout(() => window.location.reload(), 500);
+        } catch (error) {
+            cart.showNotification(error.message || 'Registration failed', 'error');
+        }
+    }
+
+    // Google OAuth Login
+    function loginWithGoogle() {
+        // Open Google OAuth in a popup window
+        const width = 500;
+        const height = 600;
+        const left = (window.screen.width / 2) - (width / 2);
+        const top = (window.screen.height / 2) - (height / 2);
+
+        const authWindow = window.open(
+            '/api/auth/google',
+            'Google Login',
+            `width=${width},height=${height},left=${left},top=${top}`
+        );
+
+        // Check if popup was blocked
+        if (!authWindow) {
+            cart.showNotification('Please allow popups for Google login', 'error');
+            return;
+        }
+    }
+
+    // Handle Google OAuth callback (when redirected back from Google)
+    function handleGoogleAuthCallback() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const googleAuth = urlParams.get('googleAuth');
+
+        if (googleAuth === 'success') {
+            const token = urlParams.get('token');
+            const userId = urlParams.get('userId');
+            const name = decodeURIComponent(urlParams.get('name'));
+            const email = decodeURIComponent(urlParams.get('email'));
+            const role = urlParams.get('role');
+
+            // Store auth data
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify({
+                _id: userId,
+                name: name,
+                email: email,
+                role: role
+            }));
+
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            // Check if this is a popup window (opened by Google OAuth)
+            if (window.opener && !window.opener.closed) {
+                // This is the popup window - notify parent and close
+                try {
+                    // Store auth data in parent window too
+                    window.opener.localStorage.setItem('token', token);
+                    window.opener.localStorage.setItem('user', JSON.stringify({
+                        _id: userId,
+                        name: name,
+                        email: email,
+                        role: role
+                    }));
+
+                    // Show notification in parent window
+                    if (window.opener.cart && typeof window.opener.cart.showNotification === 'function') {
+                        window.opener.cart.showNotification('Successfully logged in with Google!', 'success');
+                    }
+
+                    // Update UI in parent window
+                    if (window.opener.auth && typeof window.opener.auth.updateUI === 'function') {
+                        window.opener.auth.updateUI();
+                    }
+
+                    // Close the popup
+                    window.close();
+                } catch (error) {
+                    console.error('Error communicating with parent window:', error);
+                    // Fallback: reload parent and close popup
+                    window.opener.location.reload();
+                    window.close();
+                }
+            } else {
+                // Main window
+                // Show success message
+                if (typeof cart !== 'undefined') {
+                    cart.showNotification('Successfully logged in with Google!', 'success');
+                }
+
+                // Update UI
+                if (typeof auth !== 'undefined') {
+                    auth.updateUI();
+                }
+
+                // Reload page to update UI
+                setTimeout(() => window.location.reload(), 500);
+            }
+        } else if (googleAuth === 'error') {
+            // Check if this is a popup window
+            if (window.opener && !window.opener.closed) {
+                // Show error in parent window
+                if (window.opener.cart && typeof window.opener.cart.showNotification === 'function') {
+                    window.opener.cart.showNotification('Google login failed. Please try again.', 'error');
+                }
+                window.close();
+            } else {
+                if (typeof cart !== 'undefined') {
+                    cart.showNotification('Google login failed. Please try again.', 'error');
+                }
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+    }
+
+    // Check for Google OAuth callback on page load
+    document.addEventListener('DOMContentLoaded', handleGoogleAuthCallback);
+
+    // Close modal when clicking outside
+    document.addEventListener('click', (e) => {
+        const modal = document.getElementById('auth-modal');
+        if (e.target === modal) {
+            closeAuthModal();
+        }
+    });
+</script>

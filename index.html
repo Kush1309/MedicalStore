@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Your trusted online medical store for quality medicines and healthcare products">
+    <meta name="theme-color" content="#0ea5e9">
+
+    <title>Raj pharma - Your Trusted Medical Store</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">⚕️</span>
+                Raj pharma
+            </a>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span id="menu-icon">☰</span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html" class="active" onclick="closeMobileMenu()">Home</a></li>
+                <li><a href="shop.html" onclick="closeMobileMenu()">Shop</a></li>
+                <li><a href="#contact" onclick="closeMobileMenu()">Inquiry</a></li>
+                <li><a href="cart.html" style="position: relative;" onclick="closeMobileMenu()">
+                        🛒 Cart
+                        <span class="cart-badge" id="cart-count">0</span>
+                    </a></li>
+
+                <!-- Auth Buttons (shown when not logged in) -->
+                <li id="auth-buttons" class="responsive-flex-stack" style="gap: 0.5rem;">
+                    <a href="#" onclick="showAuthModal('login'); return false;" class="btn btn-sm btn-primary">Login</a>
+                    <a href="#" onclick="showAuthModal('signup'); return false;" class="btn btn-sm btn-outline">Sign
+                        Up</a>
+                </li>
+
+                <!-- User Menu (shown when logged in) -->
+                <li id="user-menu" style="display: none; position: relative;">
+                    <a href="#" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span>👤</span>
+                        <span id="user-name"></span>
+                    </a>
+                    <ul style="position: absolute; top: 100%; right: 0; background: var(--glass-bg); backdrop-filter: blur(10px); border-radius: var(--radius-md); padding: 0.5rem; min-width: 150px; display: none; box-shadow: var(--shadow-lg);"
+                        class="user-dropdown">
+                        <li><a href="my-orders.html" style="padding: 0.5rem 1rem; display: block;">My Orders</a></li>
+                        <li><a href="#" onclick="auth.logout(); return false;"
+                                style="padding: 0.5rem 1rem; display: block; color: var(--error);">Logout</a></li>
+                    </ul>
+                </li>
+
+                <!-- Admin Link (Mobile Only) -->
+                <li class="mobile-only"><a href="/secure-admin-login" onclick="closeMobileMenu()">Admin Login</a></li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Health, Our Priority</h1>
+            <p>Quality medicines delivered to your doorstep. Browse our extensive collection of trusted pharmaceutical
+                products.</p>
+            <div class="hero-buttons">
+                <a href="shop.html" class="btn btn-primary">Shop Now</a>
+                <a href="#featured" class="btn btn-outline">View Featured</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container">
+        <div class="grid grid-3">
+            <div class="card glass">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🚚</div>
+                <h3 class="card-title text-center">Fast Delivery</h3>
+                <p class="card-description text-center">Get your medicines delivered quickly and safely to your
+                    doorstep.</p>
+            </div>
+            <div class="card glass">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">✓</div>
+                <h3 class="card-title text-center">Genuine Products</h3>
+                <p class="card-description text-center">100% authentic medicines from trusted manufacturers.</p>
+            </div>
+            <div class="card glass">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">💰</div>
+                <h3 class="card-title text-center">Best Prices</h3>
+                <p class="card-description text-center">Competitive pricing with regular discounts and offers.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Medicines -->
+    <section class="container" id="featured">
+        <h2
+            style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            Featured Medicines</h2>
+        <div id="featured-medicines" class="grid grid-4">
+            <div class="spinner"></div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="container">
+        <h2
+            style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            Shop by Category</h2>
+        <div class="grid grid-4">
+            <a href="shop.html?category=Pain%20Relief" class="card glass"
+                style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">💊</div>
+                <h3 class="card-title text-center">Pain Relief</h3>
+            </a>
+            <a href="shop.html?category=Antibiotics" class="card glass" style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🔬</div>
+                <h3 class="card-title text-center">Antibiotics</h3>
+            </a>
+            <a href="shop.html?category=Vitamins" class="card glass" style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🌟</div>
+                <h3 class="card-title text-center">Vitamins</h3>
+            </a>
+            <a href="shop.html?category=Cold%20%26%20Flu" class="card glass"
+                style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🤧</div>
+                <h3 class="card-title text-center">Cold & Flu</h3>
+            </a>
+            <a href="shop.html?category=Children%20Products" class="card glass"
+                style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">👶</div>
+                <h3 class="card-title text-center">Children Products</h3>
+            </a>
+            <a href="shop.html?category=Beauty" class="card glass" style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">💄</div>
+                <h3 class="card-title text-center">Beauty</h3>
+            </a>
+            <a href="shop.html?category=Perfume" class="card glass" style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🧴</div>
+                <h3 class="card-title text-center">Perfume</h3>
+            </a>
+            <a href="shop.html?category=Protection" class="card glass" style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🛡️</div>
+                <h3 class="card-title text-center">Protection</h3>
+            </a>
+        </div>
+    </section>
+
+    <!-- Pamper for Boy & More Section -->
+    <section class="container">
+        <h2
+            style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            Pamper for Boy & More</h2>
+        <div class="grid grid-4">
+            <a href="shop.html?category=Diapers" class="card glass" style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">👶</div>
+                <h3 class="card-title text-center">Diapers (Pamper)</h3>
+            </a>
+            <a href="shop.html?category=Baby%20Wipes" class="card glass"
+                style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🧻</div>
+                <h3 class="card-title text-center">Baby Wipes</h3>
+            </a>
+            <a href="shop.html?category=Baby%20Skincare" class="card glass"
+                style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🧴</div>
+                <h3 class="card-title text-center">Baby Skincare</h3>
+            </a>
+            <a href="shop.html?category=Baby%20Food" class="card glass" style="text-decoration: none; cursor: pointer;">
+                <div style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">🥣</div>
+                <h3 class="card-title text-center">Baby Food</h3>
+            </a>
+        </div>
+    </section>
+
+    <!-- Inquiry Section -->
+    <section class="container" id="contact" style="margin-top: 4rem;">
+        <div class="card glass" style="max-width: 800px; margin: 0 auto; padding: 2.5rem;">
+            <h2
+                style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; background: linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                Quick Inquiry</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Have questions? Fill out
+                the form below and we'll get back to you shortly.</p>
+
+            <form id="inquiry-form" onsubmit="handleInquirySubmission(event)">
+                <div class="grid grid-2 responsive-grid-1-mobile" style="margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" name="name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" name="email" required placeholder="john@example.com">
+                    </div>
+                </div>
+                <div class="grid grid-2 responsive-grid-1-mobile" style="margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-input" name="phone" required placeholder="+91 98765 43210">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Full Address</label>
+                        <input type="text" class="form-input" name="address" required
+                            placeholder="123 Main St, City, State">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label class="form-label">How can we help you?</label>
+                    <textarea class="form-textarea" name="message" required placeholder="Type your message here..."
+                        style="min-height: 120px;"></textarea>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary" style="padding: 1rem 3rem;">Submit Inquiry</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <!-- Professional Footer -->
+    <footer style="background: #ffffff; border-top: 1px solid #e5e7eb; margin-top: 4rem;">
+        <div class="container" style="padding: 3rem 0 2rem;">
+            <!-- Brand Section -->
+            <div style="margin-bottom: 3rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                    <span style="font-size: 2rem;">⚕️</span>
+                    <h3 style="font-size: 1.5rem; color: #1f2937; margin: 0;">Raj pharma</h3>
+                </div>
+                <p style="color: #6b7280; max-width: 600px; line-height: 1.6; margin: 0;">
+                    Raj pharma is one of India's most trusted pharmacies, dispensing quality medicines at reasonable
+                    prices to millions of happy customers - PAN India.
+                </p>
+            </div>
+
+            <!-- Footer Columns -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem; margin-bottom: 3rem;">
+                <!-- Company Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        COMPANY</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">About
+                                Raj pharma</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Career</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Sitemap</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="/secure-admin-login"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Admin
+                                Login</a></li>
+                    </ul>
+                </div>
+
+                <!-- Our Policies Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        OUR POLICIES</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Terms &
+                                Conditions</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Privacy
+                                Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Fees &
+                                Payments Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Shipping & Delivery Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Return
+                                Refund Cancellation Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Editorial Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Caution
+                                Notice</a></li>
+                    </ul>
+                </div>
+
+                <!-- Shopping Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        SHOPPING</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="shop.html"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Medicines A to Z</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="shop.html"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Shop by
+                                Categories</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Offers
+                                & Coupons</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">FAQs</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#contact"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Contact
+                                Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        SOCIAL</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Facebook</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Twitter</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">LinkedIn</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Youtube</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Instagram</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        SUBSCRIBE TO OUR NEWSLETTER</h4>
+                    <p style="color: #6b7280; font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">Get a free
+                        subscription to our health and fitness tips, in-depth articles and exclusive updates.</p>
+                    <form
+                        onsubmit="event.preventDefault(); cart.showNotification('Thank you for subscribing!', 'success');"
+                        style="display: flex; gap: 0.5rem;">
+                        <input type="email" placeholder="enter your email address" required
+                            style="flex: 1; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.9rem; outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#d1d5db'">
+                        <button type="submit"
+                            style="background: #10b981; color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; display: flex; align-items: center; gap: 0.5rem;"
+                            onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                            <span>→</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 2rem; text-align: center;">
+                <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">
+                    © 2024 Raj pharma. All Rights Reserved | Author: Kushagra | Contact: 6394109197 | Location: Kanpur
+                    nagar
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+
+            <!-- Login Form -->
+            <div id="login-form-container">
+                <h2 style="margin-bottom: 1.5rem; text-align: center;">Welcome Back!</h2>
+
+                <button type="button" id="google-login-btn" class="btn btn-outline"
+                    style="width: 100%; margin-bottom: 1rem; display: none; align-items: center; justify-content: center; gap: 0.5rem;"
+                    onclick="handleGoogleLogin()">
+                    <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path fill="#EA4335"
+                            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                        <path fill="#4285F4"
+                            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                        <path fill="#FBBC05"
+                            d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                        <path fill="#34A853"
+                            d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.30-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                        <path fill="none" d="M0 0h48v48H0z" />
+                    </svg>
+                    Continue with Google
+                </button>
+                <div id="google-login-divider"
+                    style="display: none; align-items: center; margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    <div style="flex: 1; height: 1px; background: rgba(0,0,0,0.1);"></div>
+                    <div style="padding: 0 0.5rem;">OR</div>
+                    <div style="flex: 1; height: 1px; background: rgba(0,0,0,0.1);"></div>
+                </div>
+
+                <form id="login-form" onsubmit="handleLoginAuth(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" name="email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" name="password" required
+                            placeholder="Enter your password" minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </form>
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                    Don't have an account?
+                    <a href="#" onclick="showSignupForm(); return false;"
+                        style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign Up</a>
+                </p>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signup-form-container" style="display: none;">
+                <h2 style="margin-bottom: 1.5rem; text-align: center;">Create Account</h2>
+
+                <button type="button" id="google-signup-btn" class="btn btn-outline"
+                    style="width: 100%; margin-bottom: 1rem; display: none; align-items: center; justify-content: center; gap: 0.5rem;"
+                    onclick="handleGoogleLogin()">
+                    <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path fill="#EA4335"
+                            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                        <path fill="#4285F4"
+                            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                        <path fill="#FBBC05"
+                            d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                        <path fill="#34A853"
+                            d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                        <path fill="none" d="M0 0h48v48H0z" />
+                    </svg>
+                    Sign up with Google
+                </button>
+                <div id="google-signup-divider"
+                    style="display: none; align-items: center; margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    <div style="flex: 1; height: 1px; background: rgba(0,0,0,0.1);"></div>
+                    <div style="padding: 0 0.5rem;">OR</div>
+                    <div style="flex: 1; height: 1px; background: rgba(0,0,0,0.1);"></div>
+                </div>
+
+                <form id="signup-form" onsubmit="handleSignupAuth(event)">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" name="name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" name="email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" name="password" required
+                            placeholder="At least 6 characters" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" name="confirmPassword" required
+                            placeholder="Re-enter password" minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+                </form>
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                    Already have an account?
+                    <a href="#" onclick="showLoginForm(); return false;"
+                        style="color: var(--primary); text-decoration: none; font-weight: 600;">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/chat.js"></script>
+    <script>
+        // Check if Google OAuth is configured and show/hide buttons
+        async function checkGoogleOAuthStatus() {
+            try {
+                const response = await fetch('/api/auth/google/status');
+                const data = await response.json();
+
+                if (data.configured) {
+                    // Show Google login buttons and dividers
+                    const loginBtn = document.getElementById('google-login-btn');
+                    const loginDivider = document.getElementById('google-login-divider');
+                    const signupBtn = document.getElementById('google-signup-btn');
+                    const signupDivider = document.getElementById('google-signup-divider');
+
+                    if (loginBtn) {
+                        loginBtn.style.display = 'flex';
+                        loginDivider.style.display = 'flex';
+                    }
+                    if (signupBtn) {
+                        signupBtn.style.display = 'flex';
+                        signupDivider.style.display = 'flex';
+                    }
+                }
+            } catch (error) {
+                console.log('Google OAuth not configured');
+            }
+        }
+
+        // Check status on page load
+        checkGoogleOAuthStatus();
+
+        // Auth Modal Functions
+        function showAuthModal(mode = 'login') {
+            document.getElementById('auth-modal').classList.add('active');
+            if (mode === 'signup') {
+                showSignupForm();
+            } else {
+                showLoginForm();
+            }
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.remove('active');
+            document.getElementById('login-form').reset();
+            document.getElementById('signup-form').reset();
+        }
+
+        function showLoginForm() {
+            document.getElementById('login-form-container').style.display = 'block';
+            document.getElementById('signup-form-container').style.display = 'none';
+        }
+
+        function showSignupForm() {
+            document.getElementById('login-form-container').style.display = 'none';
+            document.getElementById('signup-form-container').style.display = 'block';
+        }
+
+        async function handleLoginAuth(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+
+            try {
+                await auth.login(email, password);
+                cart.showNotification('Login successful!', 'success');
+                closeAuthModal();
+                setTimeout(() => window.location.reload(), 500);
+            } catch (error) {
+                cart.showNotification(error.message || 'Login failed', 'error');
+            }
+        }
+
+        async function handleSignupAuth(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirmPassword');
+
+            if (password !== confirmPassword) {
+                cart.showNotification('Passwords do not match', 'error');
+                return;
+            }
+
+            try {
+                await auth.register(name, email, password);
+                cart.showNotification('Account created successfully!', 'success');
+                closeAuthModal();
+                setTimeout(() => window.location.reload(), 500);
+            } catch (error) {
+                cart.showNotification(error.message || 'Registration failed', 'error');
+            }
+        }
+
+        async function handleGoogleLogin() {
+            // Open Google OAuth in a popup window
+            const width = 500;
+            const height = 600;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
+
+            const authWindow = window.open(
+                '/api/auth/google',
+                'Google Login',
+                `width=${width},height=${height},left=${left},top=${top}`
+            );
+
+            // Check if popup was blocked
+            if (!authWindow) {
+                cart.showNotification('Please allow popups for Google login', 'error');
+                return;
+            }
+        }
+
+        // Handle Google OAuth callback (when redirected back from Google)
+        function handleGoogleAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const googleAuth = urlParams.get('googleAuth');
+
+            if (googleAuth === 'success') {
+                const token = urlParams.get('token');
+                const userId = urlParams.get('userId');
+                const name = decodeURIComponent(urlParams.get('name'));
+                const email = decodeURIComponent(urlParams.get('email'));
+                const role = urlParams.get('role');
+
+                const userData = {
+                    _id: userId,
+                    name: name,
+                    email: email,
+                    role: role
+                };
+
+                // Store auth data in current window (fallback)
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(userData));
+
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                // Check if this is a popup window
+                if (window.opener && !window.opener.closed) {
+                    try {
+                        // Method 1: Send message (Safest/Best Practice)
+                        window.opener.postMessage({
+                            type: 'GOOGLE_AUTH_SUCCESS',
+                            token: token,
+                            user: userData
+                        }, window.location.origin); // Restrict to same origin
+
+                        // Method 2: Direct access (Fallback)
+                        if (!window.opener.localStorage.getItem('token')) {
+                            window.opener.localStorage.setItem('token', token);
+                            window.opener.localStorage.setItem('user', JSON.stringify(userData));
+                            if (window.opener.auth) window.opener.auth.updateUI();
+                        }
+
+                        window.close();
+                    } catch (error) {
+                        console.error('Popup communication error:', error);
+                        // Fallback if cross-origin blocked (shouldn't happen on same domain)
+                        window.close();
+                    }
+                } else {
+                    // Main window navigation
+                    if (typeof cart !== 'undefined') {
+                        cart.showNotification('Successfully logged in with Google!', 'success');
+                    }
+                    if (typeof auth !== 'undefined') {
+                        auth.updateUI();
+                    }
+                    setTimeout(() => window.location.reload(), 500);
+                }
+            } else if (googleAuth === 'error') {
+                if (window.opener && !window.opener.closed) {
+                    window.opener.postMessage({ type: 'GOOGLE_AUTH_ERROR' }, window.location.origin);
+                    window.close();
+                } else {
+                    if (typeof cart !== 'undefined') cart.showNotification('Google login failed', 'error');
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
+        }
+
+        // Check for Google OAuth callback on page load
+        document.addEventListener('DOMContentLoaded', handleGoogleAuthCallback);
+
+        // Listen for messages from popup (Run on Main Window)
+        window.addEventListener('message', (event) => {
+            // Verify origin
+            if (event.origin !== window.location.origin) return;
+
+            if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
+                const { token, user } = event.data;
+
+                // Store data
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(user));
+
+                // Update UI
+                if (typeof auth !== 'undefined') auth.updateUI();
+                if (typeof cart !== 'undefined') cart.showNotification('Successfully logged in with Google!', 'success');
+
+                // Reload for clean state
+                setTimeout(() => window.location.reload(), 500);
+            } else if (event.data.type === 'GOOGLE_AUTH_ERROR') {
+                if (typeof cart !== 'undefined') cart.showNotification('Google login failed. Please try again.', 'error');
+            }
+        });
+
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('auth-modal');
+            if (e.target === modal) {
+                closeAuthModal();
+            }
+        });
+    </script>
+    <script>
+        // Load featured medicines
+        async function loadFeaturedMedicines() {
+            try {
+                const medicines = await api.getMedicines();
+                const featured = medicines.slice(0, 4);
+                const container = document.getElementById('featured-medicines');
+
+                container.innerHTML = featured.map(medicine => `
+          <div class="card fade-in">
+            <span class="badge badge-primary" style="margin-bottom: 0.5rem; display: inline-block;">${medicine.category}</span>
+            <img src="${medicine.image}" alt="${medicine.name}" class="card-image" onerror="if(this.src != 'https://placehold.co/300x300?text=Medicine') this.src='https://placehold.co/300x300?text=Medicine'">
+            <h3 class="card-title">${medicine.name}</h3>
+            <p class="card-description">${medicine.description.substring(0, 80)}...</p>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0.5rem 0;">By ${medicine.manufacturer}</p>
+            <div class="card-footer">
+              <span class="price">₹${medicine.price}</span>
+              <button class="btn btn-sm btn-primary" onclick="addToCart('${medicine._id}')">Add to Cart</button>
+            </div>
+          </div>
+        `).join('');
+            } catch (error) {
+                console.error('Error loading medicines:', error);
+                document.getElementById('featured-medicines').innerHTML = `<p style="color: red; text-align: center;">Failed to load medicines. Please make sure the backend server is running.<br><span style="color: gray; font-size: 0.8em">Error: ${error.name} - ${error.message}</span></p>`;
+            }
+        }
+
+        loadFeaturedMedicines();
+    </script>
+
+    <script>
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            const overlay = document.getElementById('mobile-overlay');
+            const menuIcon = document.getElementById('menu-icon');
+
+            navLinks.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuIcon.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        }
+
+        function closeMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            const overlay = document.getElementById('mobile-overlay');
+            const menuIcon = document.getElementById('menu-icon');
+
+            navLinks.classList.remove('active');
+            overlay.classList.remove('active');
+            menuIcon.textContent = '☰';
+        }
+
+        // Register service worker and manifest for PWA (Only if on HTTP/HTTPS)
+        if (window.location.protocol.startsWith('http')) {
+            // Inject Manifest
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = 'manifest.json';
+            document.head.appendChild(link);
+
+            // Register Service Worker
+            if ('serviceWorker' in navigator) {
+                // Add version parameter to force update
+                navigator.serviceWorker.register('/sw.js?v=10')
+                    .then(reg => {
+                        console.log('Service Worker registered');
+
+                        // Check for updates
+                        reg.onupdatefound = () => {
+                            const installingWorker = reg.installing;
+                            installingWorker.onstatechange = () => {
+                                if (installingWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        console.log('New content is available; please refresh.');
+                                        // Force reload to apply nwe SW
+                                        window.location.reload();
+                                    }
+                                }
+                            };
+                        };
+                    })
+                    .catch(err => console.log('Service Worker registration failed', err));
+            }
+        } else {
+            console.log('PWA features (Service Worker, Manifest) disabled on file:// protocol to prevent CORS errors.');
+        }
+
+        async function handleInquirySubmission(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
+
+                await api.createInquiry(data);
+
+                cart.showNotification('Inquiry submitted successfully! We will contact you soon.', 'success');
+                event.target.reset();
+
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            } catch (error) {
+                console.error('Error submitting inquiry:', error);
+                cart.showNotification(error.message || 'Failed to submit inquiry', 'error');
+            }
+        }
+
+        // loadFeaturedMedicines();
+
+        // Auto-open login modal if redirected from cart
+        if (window.location.hash === '#login') {
+            showAuthModal('login');
+            // Remove hash from URL
+            history.replaceState(null, null, ' ');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Raj pharma</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">⚕️</span>
+                Raj pharma
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="cart.html" class="active" style="position: relative;">
+                        🛒 Cart
+                        <span class="cart-badge" id="cart-count">0</span>
+                    </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1
+            style="font-size: 2.5rem; margin-bottom: 2rem; background: linear-gradient(135deg, #38bdf8 0%, #a78bfa 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            Shopping Cart</h1>
+
+        <div class="cart-grid-container"
+            style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem; align-items: start;">
+            <!-- Cart Items -->
+            <div>
+                <div id="cart-items" class="glass" style="padding: 1.5rem;">
+                    <!-- Cart items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="glass sticky-sidebar" style="padding: 1.5rem; position: sticky; top: 100px;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Order Summary</h2>
+                <!-- ... remains same ... -->
+
+                <div
+                    style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-secondary);">Subtotal:</span>
+                        <span id="subtotal">₹0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-secondary);">Delivery:</span>
+                        <span style="color: var(--success);">FREE</span>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700; margin-top: 1rem;">
+                        <span>Total:</span>
+                        <span id="total" style="color: var(--primary);">₹0</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%;" onclick="showCheckoutForm()">Proceed to
+                    Checkout</button>
+            </div>
+        </div>
+
+        <!-- Checkout Modal -->
+        <div id="checkout-modal" class="modal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeCheckoutForm()">&times;</button>
+                <h2 style="margin-bottom: 1.5rem;">Checkout</h2>
+
+                <form id="checkout-form" onsubmit="placeOrder(event)">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" class="form-input" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" class="form-input" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone *</label>
+                        <input type="tel" class="form-input" name="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Delivery Address *</label>
+                        <textarea class="form-textarea" name="address" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Payment Method *</label>
+                        <select class="form-select" name="paymentMethod" id="payment-method" required
+                            onchange="togglePaymentButton()">
+                            <option value="Cash on Delivery">Cash on Delivery</option>
+                            <option value="Razorpay">Pay Online (Razorpay)</option>
+                        </select>
+                        <small style="color: var(--text-muted); margin-top: 0.5rem; display: block;">
+                            💳 Online payment supports Credit/Debit Cards, UPI, Net Banking, and Wallets
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: #ffffff; border-top: 1px solid #e5e7eb; margin-top: 4rem;">
+        <div class="container" style="padding: 3rem 0 2rem;">
+            <!-- Brand Section -->
+            <div style="margin-bottom: 3rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                    <span style="font-size: 2rem;">⚕️</span>
+                    <h3 style="font-size: 1.5rem; color: #1f2937; margin: 0;">Raj pharma</h3>
+                </div>
+                <p style="color: #6b7280; max-width: 600px; line-height: 1.6; margin: 0;">
+                    Raj pharma is one of India's most trusted pharmacies, dispensing quality medicines at reasonable
+                    prices to millions of happy customers - PAN India.
+                </p>
+            </div>
+
+            <!-- Footer Columns -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem; margin-bottom: 3rem;">
+                <!-- Company Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        COMPANY</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">About
+                                Raj pharma</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Career</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Sitemap</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="/secure-admin-login"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Admin
+                                Login</a></li>
+                    </ul>
+                </div>
+
+                <!-- Our Policies Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        OUR POLICIES</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Terms &
+                                Conditions</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Privacy
+                                Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Fees &
+                                Payments Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Shipping & Delivery Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Return
+                                Refund Cancellation Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Editorial Policy</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Caution
+                                Notice</a></li>
+                    </ul>
+                </div>
+
+                <!-- Shopping Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        SHOPPING</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="shop.html"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Medicines A to Z</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="shop.html"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Shop by
+                                Categories</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Offers
+                                & Coupons</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">FAQs</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#contact"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#6b7280'">Contact
+                                Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Column -->
+                <div>
+                    <h4
+                        style="color: #1f2937; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.25rem;">
+                        SOCIAL</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Facebook</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Twitter</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">LinkedIn</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Youtube</a></li>
+                        <li style="margin-bottom: 0.75rem;"><a href="#"
+                                style="color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: color 0.2s;"
+                                onmouseover="this.style.color='#10b981'"
+                                onmouseout="this.style.color='#6b7280'">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 2rem; text-align: center;">
+                <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">
+                    © 2024 Raj pharma. All Rights Reserved | Author: Kushagra | Contact: 6394109197 | Location: Kanpur
+                    nagar
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/chat.js"></script>
+    <script>
+        function displayCart() {
+            const container = document.getElementById('cart-items');
+
+            if (cart.items.length === 0) {
+                container.innerHTML = `
+          <div style="text-align: center; padding: 3rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
+            <h3 style="margin-bottom: 1rem;">Your cart is empty</h3>
+            <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+          </div>
+        `;
+                updateSummary();
+                return;
+            }
+
+            container.innerHTML = cart.items.map(item => `
+        <div class="cart-item" style="display: flex; gap: 1.5rem; padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); align-items: center;">
+          <img src="${item.medicine.image}" alt="${item.medicine.name}" style="width: 100px; height: 100px; object-fit: cover; border-radius: var(--radius-md);" onerror="if(this.src != 'https://placehold.co/100x100?text=Medicine') this.src='https://placehold.co/100x100?text=Medicine'">
+          
+          <div style="flex: 1;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">${item.medicine.name}</h3>
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">${item.medicine.category}</p>
+            <p style="color: var(--primary); font-weight: 700; font-size: 1.25rem; margin-top: 0.5rem;">₹${item.medicine.price}</p>
+          </div>
+
+          <div class="cart-item-actions" style="display: flex; align-items: center; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.05); padding: 0.5rem; border-radius: var(--radius-md);">
+              <button class="btn btn-sm" style="padding: 0.25rem 0.75rem;" onclick="updateCartQuantity('${item.medicine._id}', ${item.quantity - 1})">-</button>
+              <span style="min-width: 30px; text-align: center; font-weight: 600;">${item.quantity}</span>
+              <button class="btn btn-sm" style="padding: 0.25rem 0.75rem;" onclick="updateCartQuantity('${item.medicine._id}', ${item.quantity + 1})">+</button>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="removeFromCart('${item.medicine._id}')">Remove</button>
+          </div>
+        </div>
+      `).join('');
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const total = cart.getTotal();
+            document.getElementById('subtotal').textContent = `₹${total}`;
+            document.getElementById('total').textContent = `₹${total}`;
+        }
+
+        function updateCartQuantity(medicineId, newQuantity) {
+            cart.updateQuantity(medicineId, newQuantity);
+            displayCart();
+        }
+
+        function removeFromCart(medicineId) {
+            cart.remove(medicineId);
+            displayCart();
+            cart.showNotification('Item removed from cart', 'info');
+        }
+
+        function showCheckoutForm() {
+            if (cart.items.length === 0) {
+                cart.showNotification('Your cart is empty', 'error');
+                return;
+            }
+
+            // Check if user is logged in
+            if (!auth.isLoggedIn()) {
+                cart.showNotification('Please login to place an order', 'error');
+                setTimeout(() => {
+                    window.location.href = 'index.html#login';
+                }, 1000);
+                return;
+            }
+
+            // Pre-fill form with user data if logged in
+            const user = auth.getCurrentUser();
+            if (user) {
+                const form = document.getElementById('checkout-form');
+                if (form.name) form.name.value = user.name || '';
+                if (form.email) form.email.value = user.email || '';
+            }
+
+            document.getElementById('checkout-modal').classList.add('active');
+        }
+
+        function closeCheckoutForm() {
+            document.getElementById('checkout-modal').classList.remove('active');
+        }
+
+        function togglePaymentButton() {
+            const paymentMethod = document.getElementById('payment-method').value;
+            const submitBtn = document.querySelector('#checkout-form button[type="submit"]');
+
+            if (paymentMethod === 'Razorpay') {
+                submitBtn.textContent = 'Pay Now';
+                submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            } else {
+                submitBtn.textContent = 'Place Order';
+                submitBtn.style.background = '';
+            }
+        }
+
+        async function placeOrder(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const paymentMethod = formData.get('paymentMethod');
+
+            const orderData = {
+                customer: {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address')
+                },
+                items: cart.items.map(item => ({
+                    medicine: item.medicine._id,
+                    name: item.medicine.name,
+                    price: item.medicine.price,
+                    quantity: item.quantity
+                })),
+                totalAmount: cart.getTotal(),
+                paymentMethod: paymentMethod
+            };
+
+            // If Razorpay selected, initiate payment
+            if (paymentMethod === 'Razorpay') {
+                await initiateRazorpayPayment(orderData);
+            } else {
+                // Cash on Delivery - create order directly
+                await createOrderDirect(orderData);
+            }
+        }
+
+        async function initiateRazorpayPayment(orderData) {
+            try {
+                // Create Razorpay order
+                const paymentOrder = await api.createPaymentOrder(orderData.totalAmount);
+
+                const options = {
+                    key: paymentOrder.key_id,
+                    amount: paymentOrder.amount,
+                    currency: paymentOrder.currency,
+                    name: 'Raj pharma',
+                    description: 'Medicine Purchase',
+                    order_id: paymentOrder.order_id,
+                    handler: async function (response) {
+                        // Payment successful, verify and create order
+                        try {
+                            const verification = await api.verifyPayment({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            });
+
+                            if (verification.success) {
+                                // Add payment details to order
+                                orderData.paymentStatus = 'Completed';
+                                orderData.razorpay_order_id = response.razorpay_order_id;
+                                orderData.razorpay_payment_id = response.razorpay_payment_id;
+                                orderData.razorpay_signature = response.razorpay_signature;
+
+                                await createOrderDirect(orderData);
+                            }
+                        } catch (error) {
+                            console.error('Payment verification error:', error);
+                            cart.showNotification('Payment verification failed', 'error');
+                        }
+                    },
+                    prefill: {
+                        name: orderData.customer.name,
+                        email: orderData.customer.email,
+                        contact: orderData.customer.phone
+                    },
+                    theme: {
+                        color: '#0ea5e9'
+                    },
+                    modal: {
+                        ondismiss: function () {
+                            cart.showNotification('Payment cancelled', 'info');
+                        }
+                    }
+                };
+
+                const razorpay = new Razorpay(options);
+                razorpay.open();
+            } catch (error) {
+                console.error('Razorpay error:', error);
+                cart.showNotification('Payment initialization failed. Please try again.', 'error');
+            }
+        }
+
+        async function createOrderDirect(orderData) {
+            try {
+                const order = await api.createOrder(orderData);
+                cart.showNotification('Order placed successfully! Order ID: ' + order._id, 'success');
+                cart.clear();
+                closeCheckoutForm();
+                displayCart();
+
+                // Redirect to home after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            } catch (error) {
+                console.error('Error placing order:', error);
+                cart.showNotification(error.message || 'Failed to place order. Please try again.', 'error');
+            }
+        }
+
+        // Display cart on page load - ensure cart is initialized first
+        document.addEventListener('DOMContentLoaded', () => {
+            // Give cart.init() time to complete
+            setTimeout(() => {
+                displayCart();
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>
