@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - Raj pharma</title>
     <link rel="stylesheet" href="styles/main.css">
-    <!-- Razorpay SDK -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 </head>
 
 <body>
@@ -98,14 +97,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Payment Method *</label>
-                        <select class="form-select" name="paymentMethod" id="payment-method" required
-                            onchange="togglePaymentButton()">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" name="paymentMethod" id="payment-method" required>
                             <option value="Cash on Delivery">Cash on Delivery</option>
-                            <option value="Razorpay">Pay Online (Razorpay)</option>
                         </select>
                         <small style="color: var(--text-muted); margin-top: 0.5rem; display: block;">
-                            💳 Online payment supports Credit/Debit Cards, UPI, Net Banking, and Wallets
+                            📦 Pay with cash when your medicine is delivered to your doorstep.
                         </small>
                     </div>
 
@@ -355,18 +352,7 @@
             document.getElementById('checkout-modal').classList.remove('active');
         }
 
-        function togglePaymentButton() {
-            const paymentMethod = document.getElementById('payment-method').value;
-            const submitBtn = document.querySelector('#checkout-form button[type="submit"]');
 
-            if (paymentMethod === 'Razorpay') {
-                submitBtn.textContent = 'Pay Now';
-                submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            } else {
-                submitBtn.textContent = 'Place Order';
-                submitBtn.style.background = '';
-            }
-        }
 
         async function placeOrder(event) {
             event.preventDefault();
@@ -391,72 +377,11 @@
                 paymentMethod: paymentMethod
             };
 
-            // If Razorpay selected, initiate payment
-            if (paymentMethod === 'Razorpay') {
-                await initiateRazorpayPayment(orderData);
-            } else {
-                // Cash on Delivery - create order directly
-                await createOrderDirect(orderData);
-            }
+            // Create order directly
+            await createOrderDirect(orderData);
         }
 
-        async function initiateRazorpayPayment(orderData) {
-            try {
-                // Create Razorpay order
-                const paymentOrder = await api.createPaymentOrder(orderData.totalAmount);
 
-                const options = {
-                    key: paymentOrder.key_id,
-                    amount: paymentOrder.amount,
-                    currency: paymentOrder.currency,
-                    name: 'Raj pharma',
-                    description: 'Medicine Purchase',
-                    order_id: paymentOrder.order_id,
-                    handler: async function (response) {
-                        // Payment successful, verify and create order
-                        try {
-                            const verification = await api.verifyPayment({
-                                razorpay_order_id: response.razorpay_order_id,
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_signature: response.razorpay_signature
-                            });
-
-                            if (verification.success) {
-                                // Add payment details to order
-                                orderData.paymentStatus = 'Completed';
-                                orderData.razorpay_order_id = response.razorpay_order_id;
-                                orderData.razorpay_payment_id = response.razorpay_payment_id;
-                                orderData.razorpay_signature = response.razorpay_signature;
-
-                                await createOrderDirect(orderData);
-                            }
-                        } catch (error) {
-                            console.error('Payment verification error:', error);
-                            cart.showNotification('Payment verification failed', 'error');
-                        }
-                    },
-                    prefill: {
-                        name: orderData.customer.name,
-                        email: orderData.customer.email,
-                        contact: orderData.customer.phone
-                    },
-                    theme: {
-                        color: '#0ea5e9'
-                    },
-                    modal: {
-                        ondismiss: function () {
-                            cart.showNotification('Payment cancelled', 'info');
-                        }
-                    }
-                };
-
-                const razorpay = new Razorpay(options);
-                razorpay.open();
-            } catch (error) {
-                console.error('Razorpay error:', error);
-                cart.showNotification('Payment initialization failed. Please try again.', 'error');
-            }
-        }
 
         async function createOrderDirect(orderData) {
             try {

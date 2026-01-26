@@ -10,7 +10,6 @@ const connectDB = require('./config/db');
 const medicineRoutes = require('./routes/medicines');
 const orderRoutes = require('./routes/orders');
 const authRoutes = require('./routes/auth');
-const paymentRoutes = require('./routes/payment');
 const inquiryRoutes = require('./routes/inquiries');
 const chatRoutes = require('./routes/chat');
 const adminAuthRoutes = require('./routes/adminAuth');
@@ -87,7 +86,6 @@ app.use('/api', apiLimiter);
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/payment', paymentRoutes);
 app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/chat', chatRoutes);
 

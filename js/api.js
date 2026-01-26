@@ -171,30 +171,7 @@ const api = {
         return response.json();
     },
 
-    // Payment
-    async createPaymentOrder(amount) {
-        const response = await fetch(`${API_BASE_URL}/payment/create-order`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ amount, currency: 'INR' })
-        });
-        if (!response.ok) throw new Error('Failed to create payment order');
-        return response.json();
-    },
 
-    async verifyPayment(paymentData) {
-        const response = await fetch(`${API_BASE_URL}/payment/verify-payment`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(paymentData)
-        });
-        if (!response.ok) throw new Error('Payment verification failed');
-        return response.json();
-    },
 
     // Inquiries
     async createInquiry(data) {
