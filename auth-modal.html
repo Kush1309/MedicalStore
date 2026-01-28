@@ -255,12 +255,17 @@
                     }
 
                     // Close the popup
-                    window.close();
+                    // Close the popup ONLY if it's the Google Login window
+                    if (window.name === 'Google Login') {
+                        window.close();
+                    }
                 } catch (error) {
                     console.error('Error communicating with parent window:', error);
-                    // Fallback: reload parent and close popup
-                    window.opener.location.reload();
-                    window.close();
+                    // Fallback: reload parent and close popup if it's the Google Login window
+                    if (window.name === 'Google Login') {
+                        window.opener.location.reload();
+                        window.close();
+                    }
                 }
             } else {
                 // Main window
@@ -279,11 +284,13 @@
             }
         } else if (googleAuth === 'error') {
             // Check if this is a popup window
-            if (window.opener && !window.opener.closed) {
+            if (window.opener && window.name === 'Google Login' && !window.opener.closed) {
                 // Show error in parent window
                 if (window.opener.cart && typeof window.opener.cart.showNotification === 'function') {
                     window.opener.cart.showNotification('Google login failed. Please try again.', 'error');
                 }
+                window.close();
+            } else if (window.name === 'Google Login') {
                 window.close();
             } else {
                 if (typeof cart !== 'undefined') {

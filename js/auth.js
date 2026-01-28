@@ -69,7 +69,7 @@ const auth = {
             }
 
             // Show Admin link only if user role is admin
-            const adminLink = document.querySelector('a[href="admin.html"]');
+            const adminLink = document.querySelector('a[href="/admin"]');
             if (adminLink) {
                 const li = adminLink.parentElement;
                 li.style.display = user.role === 'admin' ? 'block' : 'none';
@@ -80,7 +80,7 @@ const auth = {
             if (userMenu) userMenu.style.display = 'none';
 
             // Hide Admin link
-            const adminLink = document.querySelector('a[href="admin.html"]');
+            const adminLink = document.querySelector('a[href="/admin"]');
             if (adminLink) {
                 const li = adminLink.parentElement;
                 li.style.display = 'none';

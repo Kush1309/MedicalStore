@@ -15,7 +15,11 @@ router.post('/login', loginLimiter, async (req, res) => {
             return res.status(400).json({ message: 'Please provide all required fields' });
         }
 
-        if (email !== process.env.ADMIN_EMAIL && email !== process.env.ADMIN_USERNAME) {
+        const inputEmail = email.toLowerCase();
+        const adminEmailEnv = (process.env.ADMIN_EMAIL || '').toLowerCase();
+        const adminUsernameEnv = (process.env.ADMIN_USERNAME || 'kushagrasaxena1309@gmail.com').toLowerCase();
+
+        if (inputEmail !== adminEmailEnv && inputEmail !== adminUsernameEnv) {
             console.log('Admin login failed: Email mismatch');
             // Generic error message to not reveal if user exists
             return res.status(401).json({ message: 'Invalid credentials' });

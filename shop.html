@@ -16,13 +16,34 @@
                 <span class="logo-icon">⚕️</span>
                 Raj pharma
             </a>
-            <ul class="nav-links">
+            <ul class="nav-links" id="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="shop.html" class="active">Shop</a></li>
                 <li><a href="cart.html" style="position: relative;">
                         🛒 Cart
                         <span class="cart-badge" id="cart-count">0</span>
                     </a></li>
+
+                <!-- Auth Buttons -->
+                <li id="auth-buttons">
+                    <a href="index.html#login" class="btn btn-sm btn-primary">Login</a>
+                </li>
+
+                <!-- User Menu -->
+                <li id="user-menu" style="display: none; position: relative;">
+                    <a href="#" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span>👤</span>
+                        <span id="user-name"></span>
+                    </a>
+                    <ul style="position: absolute; top: 100%; right: 0; background: var(--bg-secondary); border-radius: var(--radius-md); padding: 0.5rem; min-width: 150px; display: none; box-shadow: var(--shadow-lg);"
+                        class="user-dropdown">
+                        <li><a href="/admin" style="padding: 0.5rem 1rem; display: block; display: none;">Admin
+                                Dashboard</a></li>
+                        <li><a href="my-orders.html" style="padding: 0.5rem 1rem; display: block;">My Orders</a></li>
+                        <li><a href="#" onclick="auth.logout(); return false;"
+                                style="padding: 0.5rem 1rem; display: block; color: var(--error);">Logout</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </nav>
@@ -215,6 +236,7 @@
     </footer>
 
     <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
     <script src="js/chat.js"></script>
     <script>

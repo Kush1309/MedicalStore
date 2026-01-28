@@ -49,6 +49,8 @@
                     </a>
                     <ul style="position: absolute; top: 100%; right: 0; background: var(--glass-bg); backdrop-filter: blur(10px); border-radius: var(--radius-md); padding: 0.5rem; min-width: 150px; display: none; box-shadow: var(--shadow-lg);"
                         class="user-dropdown">
+                        <li><a href="/admin" style="padding: 0.5rem 1rem; display: block; display: none;">Admin
+                                Dashboard</a></li>
                         <li><a href="my-orders.html" style="padding: 0.5rem 1rem; display: block;">My Orders</a></li>
                         <li><a href="#" onclick="auth.logout(); return false;"
                                 style="padding: 0.5rem 1rem; display: block; color: var(--error);">Logout</a></li>
@@ -441,6 +443,15 @@
                     <a href="#" onclick="showSignupForm(); return false;"
                         style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign Up</a>
                 </p>
+                <div
+                    style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <a href="/secure-admin-login"
+                        style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s;"
+                        onmouseover="this.style.color='var(--primary)'"
+                        onmouseout="this.style.color='var(--text-muted)'">
+                        Admin Access
+                    </a>
+                </div>
             </div>
 
             <!-- Signup Form -->
@@ -663,11 +674,15 @@
                             if (window.opener.auth) window.opener.auth.updateUI();
                         }
 
-                        window.close();
+                        // Only close if it's a popup and we explicitly have a success/error signal
+                        if (window.opener && window.name === 'Google Login') {
+                            window.close();
+                        }
                     } catch (error) {
                         console.error('Popup communication error:', error);
-                        // Fallback if cross-origin blocked (shouldn't happen on same domain)
-                        window.close();
+                        if (window.opener && window.name === 'Google Login') {
+                            window.close();
+                        }
                     }
                 } else {
                     // Main window navigation
@@ -680,8 +695,10 @@
                     setTimeout(() => window.location.reload(), 500);
                 }
             } else if (googleAuth === 'error') {
-                if (window.opener && !window.opener.closed) {
+                if (window.opener && window.name === 'Google Login' && !window.opener.closed) {
                     window.opener.postMessage({ type: 'GOOGLE_AUTH_ERROR' }, window.location.origin);
+                    window.close();
+                } else if (window.opener && window.name === 'Google Login') {
                     window.close();
                 } else {
                     if (typeof cart !== 'undefined') cart.showNotification('Google login failed', 'error');

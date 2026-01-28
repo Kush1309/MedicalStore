@@ -88,7 +88,10 @@ router.post('/login', async (req, res) => {
         } else if (email) {
 
             // Special check for Admin Email
-            if (email === process.env.ADMIN_USERNAME || email === 'kushagrasaxena1309@gmail.com') {
+            const adminUserEmail = (process.env.ADMIN_USERNAME || 'kushagrasaxena1309@gmail.com').toLowerCase();
+            const inputEmail = email.toLowerCase();
+
+            if (inputEmail === adminUserEmail) {
                 if (password === process.env.ADMIN_PASSWORD) {
                     // Check if admin exists in DB, if not create/update
                     let adminUser = await User.findOne({ email });
