@@ -54,8 +54,8 @@ app.use(cors({
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
 
-        // Allow localhost and netlify domains
-        if (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('netlify.app')) {
+        // Allow localhost, netlify and vercel domains
+        if (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('netlify.app') || origin.includes('vercel.app')) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -181,4 +181,10 @@ const startServer = async () => {
     }
 };
 
-startServer();
+// Export app for Vercel
+module.exports = app;
+
+// Start server only if not in Vercel environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    startServer();
+}
