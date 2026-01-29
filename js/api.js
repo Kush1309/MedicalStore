@@ -124,8 +124,15 @@ const api = {
             body: JSON.stringify({ email, password })
         });
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Invalid credentials');
+            let errorMessage = 'Invalid credentials';
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const error = await response.json();
+                errorMessage = error.message || errorMessage;
+            } else {
+                errorMessage = `Server Error: ${response.status} ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
         }
         return response.json();
     },
@@ -139,8 +146,15 @@ const api = {
             body: JSON.stringify({ name, email, password })
         });
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Registration failed');
+            let errorMessage = 'Registration failed';
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const error = await response.json();
+                errorMessage = error.message || errorMessage;
+            } else {
+                errorMessage = `Server Error: ${response.status} ${response.statusText}`;
+            }
+            throw new Error(errorMessage);
         }
         return response.json();
     },
