@@ -6,6 +6,14 @@
             "destination": "/backend/server.js"
         },
         {
+            "source": "/secure-admin-login",
+            "destination": "/backend/server.js"
+        },
+        {
+            "source": "/admin",
+            "destination": "/backend/server.js"
+        },
+        {
             "source": "/uploads/(.*)",
             "destination": "/uploads/$1"
         },
