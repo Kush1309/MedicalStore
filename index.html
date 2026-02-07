@@ -50,7 +50,8 @@
                     </a>
                     <ul style="position: absolute; top: 100%; right: 0; background: var(--glass-bg); backdrop-filter: blur(10px); border-radius: var(--radius-md); padding: 0.5rem; min-width: 150px; display: none; box-shadow: var(--shadow-lg);"
                         class="user-dropdown">
-                        <li><a href="/admin" style="padding: 0.5rem 1rem; display: block; display: none;">Admin
+                        <li><a href="/admin" id="admin-dashboard-link"
+                                style="padding: 0.5rem 1rem; display: block;">Admin
                                 Dashboard</a></li>
                         <li><a href="my-orders.html" style="padding: 0.5rem 1rem; display: block;">My Orders</a></li>
                         <li><a href="#" onclick="auth.logout(); return false;"
@@ -585,29 +586,41 @@
                 // Check if this is a popup window
                 if (window.opener && !window.opener.closed) {
                     try {
+                        // Store auth data in current window for safety
+                        localStorage.setItem('token', token);
+                        localStorage.setItem('user', JSON.stringify(userData));
+
                         // Method 1: Send message (Safest/Best Practice)
                         window.opener.postMessage({
                             type: 'GOOGLE_AUTH_SUCCESS',
                             token: token,
                             user: userData
-                        }, window.location.origin); // Restrict to same origin
+                        }, window.location.origin);
 
                         // Method 2: Direct access (Fallback)
-                        if (!window.opener.localStorage.getItem('token')) {
+                        try {
                             window.opener.localStorage.setItem('token', token);
                             window.opener.localStorage.setItem('user', JSON.stringify(userData));
                             if (window.opener.auth) window.opener.auth.updateUI();
+                        } catch (e) {
+                            console.log('Direct opener access failed (likely cross-origin restriction)');
                         }
 
-                        // Only close if it's a popup and we explicitly have a success/error signal
-                        if (window.opener && window.name === 'Google Login') {
-                            window.close();
-                        }
+                        // Close the popup strictly and immediately
+                        console.log('Closing popup...');
+                        window.close();
+
+                        // Fallback if window.close() is ignored
+                        document.body.innerHTML = `
+                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; text-align: center; padding: 2rem;">
+                                <h1 style="color: #10b981;">✓ Login Successful</h1>
+                                <p>You can now close this window and return to the main application.</p>
+                                <button onclick="window.close()" style="padding: 0.75rem 1.5rem; background: #0ea5e9; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Close Window</button>
+                            </div>
+                        `;
                     } catch (error) {
                         console.error('Popup communication error:', error);
-                        if (window.opener && window.name === 'Google Login') {
-                            window.close();
-                        }
+                        window.close();
                     }
                 } else {
                     // Main window navigation
@@ -674,19 +687,35 @@
                 const featured = medicines.slice(0, 4);
                 const container = document.getElementById('featured-medicines');
 
-                container.innerHTML = featured.map(medicine => `
-          <div class="card fade-in">
+                container.innerHTML = featured.map(medicine => {
+                    const discount = medicine.discount || 0;
+                    const hasDiscount = discount > 0;
+                    const originalPrice = medicine.price;
+                    const discountedPrice = hasDiscount ? (originalPrice * (1 - discount / 100)).toFixed(2) : originalPrice;
+
+                    return `
+          <div class="card fade-in" style="position: relative;">
+            ${hasDiscount ? `<span class="badge badge-success" style="position: absolute; top: 0.5rem; right: 0.5rem; z-index: 10; font-size: 0.75rem; font-weight: 700;">${discount}% OFF</span>` : ''}
             <span class="badge badge-primary" style="margin-bottom: 0.5rem; display: inline-block;">${medicine.category}</span>
             <img src="${medicine.image}" alt="${medicine.name}" class="card-image" onerror="if(this.src != 'images/medicine-placeholder.png') this.src='images/medicine-placeholder.png'">
             <h3 class="card-title">${medicine.name}</h3>
             <p class="card-description">${medicine.description.substring(0, 80)}...</p>
             <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0.5rem 0;">By ${medicine.manufacturer}</p>
             <div class="card-footer">
-              <span class="price">₹${medicine.price}</span>
-              <button class="btn btn-sm btn-primary" onclick="addToCart('${medicine._id}')">Add to Cart</button>
+              <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                ${hasDiscount ? `<span style="font-size: 0.875rem; color: var(--text-muted); text-decoration: line-through; margin-bottom: 0.25rem;">₹${originalPrice}</span>` : ''}
+                <span class="price" style="color: ${hasDiscount ? 'var(--secondary)' : 'inherit'};">₹${discountedPrice}</span>
+              </div>
+              <button class="btn-add-to-cart" onclick="addToCart('${medicine._id}')">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                Add to Cart
+              </button>
             </div>
           </div>
-        `).join('');
+        `;
+                }).join('');
             } catch (error) {
                 console.error('Error loading medicines:', error);
                 document.getElementById('featured-medicines').innerHTML = `<p style="color: red; text-align: center;">Failed to load medicines. Please make sure the backend server is running.<br><span style="color: gray; font-size: 0.8em">Error: ${error.name} - ${error.message}</span></p>`;

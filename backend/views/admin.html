@@ -100,6 +100,7 @@
                             <th>Name</th>
                             <th>Category</th>
                             <th>Price</th>
+                            <th>Discount</th>
                             <th>Stock</th>
                             <th>Manufacturer</th>
                             <th>Actions</th>
@@ -107,7 +108,7 @@
                     </thead>
                     <tbody id="medicines-table">
                         <tr>
-                            <td colspan="6" style="text-align: center;">
+                            <td colspan="7" style="text-align: center;">
                                 <div class="spinner"></div>
                             </td>
                         </tr>
@@ -205,9 +206,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Stock *</label>
-                        <input type="number" class="form-input" name="stock" min="0" required>
+                        <label class="form-label">Discount (%) </label>
+                        <input type="number" class="form-input" name="discount" min="0" max="100" value="0" step="1">
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Stock *</label>
+                    <input type="number" class="form-input" name="stock" min="0" required>
                 </div>
 
                 <div class="form-group">
@@ -359,15 +365,25 @@
             const tbody = document.getElementById('medicines-table');
 
             if (medicines.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-secondary);">No medicines found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-secondary);">No medicines found</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = medicines.map(medicine => `
+            tbody.innerHTML = medicines.map(medicine => {
+                const discountValue = medicine.discount || 0;
+                const hasDiscount = discountValue > 0;
+                const finalPrice = hasDiscount ? (medicine.price * (1 - discountValue / 100)).toFixed(2) : medicine.price;
+
+                return `
         <tr>
           <td><strong>${medicine.name}</strong></td>
           <td><span class="badge badge-primary">${medicine.category}</span></td>
-          <td>₹${medicine.price}</td>
+          <td>
+            ${hasDiscount ? `<div><span style="text-decoration: line-through; color: var(--text-muted); font-size: 0.875rem;">₹${medicine.price}</span><br><strong style="color: var(--secondary);">₹${finalPrice}</strong></div>` : `₹${medicine.price}`}
+          </td>
+          <td>
+            ${hasDiscount ? `<span class="badge badge-success">${discountValue}% OFF</span>` : `<span style="color: var(--text-muted);">-</span>`}
+          </td>
           <td>
             <span class="${medicine.stock === 0 ? 'stock-out' : medicine.stock < 20 ? 'stock-low' : 'stock-available'}">
               ${medicine.stock}
@@ -379,7 +395,8 @@
             <button class="btn btn-sm btn-danger" onclick="deleteMedicine('${medicine._id}')">Delete</button>
           </td>
         </tr>
-      `).join('');
+      `;
+            }).join('');
         }
 
         async function loadOrders() {
@@ -597,6 +614,7 @@
             form.name.value = medicine.name;
             form.description.value = medicine.description;
             form.price.value = medicine.price;
+            form.discount.value = medicine.discount || 0;
             form.stock.value = medicine.stock;
             form.category.value = medicine.category;
             form.manufacturer.value = medicine.manufacturer;
@@ -662,6 +680,7 @@
                     name: formData.get('name'),
                     description: formData.get('description'),
                     price: parseFloat(formData.get('price')),
+                    discount: parseFloat(formData.get('discount')) || 0,
                     stock: parseInt(formData.get('stock')),
                     category: formData.get('category'),
                     manufacturer: formData.get('manufacturer'),

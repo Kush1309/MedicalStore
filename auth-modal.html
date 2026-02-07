@@ -235,37 +235,56 @@
             if (window.opener && !window.opener.closed) {
                 // This is the popup window - notify parent and close
                 try {
-                    // Store auth data in parent window too
-                    window.opener.localStorage.setItem('token', token);
-                    window.opener.localStorage.setItem('user', JSON.stringify({
+                    // Store auth data in current window for safety
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('user', JSON.stringify({
                         _id: userId,
                         name: name,
                         email: email,
                         role: role
                     }));
 
-                    // Show notification in parent window
-                    if (window.opener.cart && typeof window.opener.cart.showNotification === 'function') {
-                        window.opener.cart.showNotification('Successfully logged in with Google!', 'success');
+                    // Store auth data in parent window too
+                    try {
+                        window.opener.localStorage.setItem('token', token);
+                        window.opener.localStorage.setItem('user', JSON.stringify({
+                            _id: userId,
+                            name: name,
+                            email: email,
+                            role: role
+                        }));
+                        if (window.opener.auth) window.opener.auth.updateUI();
+                    } catch (e) {
+                        console.log('Direct opener access failed (likely cross-origin restriction)');
                     }
 
-                    // Update UI in parent window
-                    if (window.opener.auth && typeof window.opener.auth.updateUI === 'function') {
-                        window.opener.auth.updateUI();
-                    }
+                    // Send message to parent
+                    window.opener.postMessage({
+                        type: 'GOOGLE_AUTH_SUCCESS',
+                        token: token,
+                        user: {
+                            _id: userId,
+                            name: name,
+                            email: email,
+                            role: role
+                        }
+                    }, window.location.origin);
 
-                    // Close the popup
-                    // Close the popup ONLY if it's the Google Login window
-                    if (window.name === 'Google Login') {
-                        window.close();
-                    }
+                    // Close the popup strictly and immediately
+                    console.log('Closing popup...');
+                    window.close();
+
+                    // Fallback if window.close() is ignored
+                    document.body.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; text-align: center; padding: 2rem;">
+                            <h1 style="color: #10b981;">✓ Login Successful</h1>
+                            <p>You can now close this window and return to the main application.</p>
+                            <button onclick="window.close()" style="padding: 0.75rem 1.5rem; background: #0ea5e9; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Close Window</button>
+                        </div>
+                    `;
                 } catch (error) {
                     console.error('Error communicating with parent window:', error);
-                    // Fallback: reload parent and close popup if it's the Google Login window
-                    if (window.name === 'Google Login') {
-                        window.opener.location.reload();
-                        window.close();
-                    }
+                    window.close();
                 }
             } else {
                 // Main window

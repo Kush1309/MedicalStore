@@ -69,10 +69,11 @@ const auth = {
             }
 
             // Show Admin link only if user role is admin
-            const adminLink = document.querySelector('a[href="/admin"]');
+            const adminLink = document.getElementById('admin-dashboard-link') || document.querySelector('a[href="/admin"]');
             if (adminLink) {
-                const li = adminLink.parentElement;
-                li.style.display = user.role === 'admin' ? 'block' : 'none';
+                const li = adminLink.closest('li');
+                if (li) li.style.display = user.role === 'admin' ? 'block' : 'none';
+                else adminLink.style.display = user.role === 'admin' ? 'block' : 'none';
             }
         } else {
             // User is not logged in
@@ -80,10 +81,11 @@ const auth = {
             if (userMenu) userMenu.style.display = 'none';
 
             // Hide Admin link
-            const adminLink = document.querySelector('a[href="/admin"]');
+            const adminLink = document.getElementById('admin-dashboard-link') || document.querySelector('a[href="/admin"]');
             if (adminLink) {
-                const li = adminLink.parentElement;
-                li.style.display = 'none';
+                const li = adminLink.closest('li');
+                if (li) li.style.display = 'none';
+                else adminLink.style.display = 'none';
             }
         }
     },

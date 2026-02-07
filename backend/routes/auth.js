@@ -219,12 +219,15 @@ router.get('/google/callback',
             // Generate JWT token for the authenticated user
             const token = generateToken(req.user._id);
 
+            // Determine client URL (default to React dev server)
+            const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
             // Redirect to frontend with token in URL
-            // Frontend will extract token and store it
-            res.redirect(`/index.html?googleAuth=success&token=${token}&userId=${req.user._id}&name=${encodeURIComponent(req.user.name)}&email=${encodeURIComponent(req.user.email)}&role=${req.user.role}`);
+            res.redirect(`${clientUrl}/google-callback?token=${token}&userId=${req.user._id}&name=${encodeURIComponent(req.user.name)}&email=${encodeURIComponent(req.user.email)}&role=${req.user.role}`);
         } catch (error) {
             console.error('Google callback error:', error);
-            res.redirect('/index.html?googleAuth=error');
+            const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+            res.redirect(`${clientUrl}/google-callback?error=true`);
         }
     }
 );
